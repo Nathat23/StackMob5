@@ -96,7 +96,7 @@
         </repository>
         <repository>
             <id>papermc</id>
-            <url>https://repo.papermc.io/repository/maven-public/</url>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
         <repository>
             <id>CodeMC</id>
@@ -113,10 +113,6 @@
         <repository>
             <id>sonatype-oss-snapshots1</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>sonatype-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
 
@@ -176,12 +172,6 @@
             <version>3.11</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/jars/MyPet-3.11-SNAPSHOT-B1627.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>me.lucko</groupId>
-            <artifactId>spark-api</artifactId>
-            <version>0.1-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
