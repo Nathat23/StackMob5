@@ -66,11 +66,11 @@ public class StackingTool {
         player.getInventory().setItemInMainHand(itemStack);
         Component component = Component.text("Shifted mode to ").color(TextColor.color(211, 211, 211));
         Component mode = Component.text(getMode(nextMode).toString()).color(TextColor.color(169, 169, 169));
-        sm.getAdventure().player(player).sendActionBar(component.append(mode));
+        player.sendActionBar(component.append(mode));
     }
 
     public void performAction(LivingEntity clicked) {
-        User user = new User(sm.getAdventure().sender(player), player);
+        User user = new User(player, player);
         if (!sm.getEntityManager().isStackedEntity(clicked)) {
             if (getMode() != ToolMode.MODIFY) {
                 user.sendError("You cannot use " + getMode() + " on an unstacked entity!");

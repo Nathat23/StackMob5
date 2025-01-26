@@ -9,7 +9,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -21,13 +20,13 @@ import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 import uk.antiperson.stackmob.StackMob;
 import uk.antiperson.stackmob.config.EntityConfig;
+import uk.antiperson.stackmob.entity.tags.DisplayTag;
 import uk.antiperson.stackmob.events.EventHelper;
 import uk.antiperson.stackmob.hook.StackableMobHook;
 import uk.antiperson.stackmob.utils.Utilities;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class StackEntity {
 
@@ -43,12 +42,14 @@ public class StackEntity {
     private int lastLocationTimeout;
     private Set<ItemStack> equiptItems;
     private Tag tag;
+    private DisplayTag displayTag;
     private EntityConfig entityConfig;
 
     public StackEntity(StackMob sm, LivingEntity entity) {
         this.sm = sm;
         this.entity = entity;
         this.entityManager = sm.getEntityManager();
+        this.displayTag = new DisplayTag(sm, this);
     }
 
     /**
@@ -85,6 +86,7 @@ public class StackEntity {
         entityManager.unregisterStackedEntity(this);
         if (!isSingle()) {
             getTag().update();
+            getDisplayTag().remove();
         }
     }
 
@@ -554,6 +556,10 @@ public class StackEntity {
         return result == null || result.getHitBlock() == null;
     }
 
+    public DisplayTag getDisplayTag() {
+        return displayTag;
+    }
+
     public enum EquipItemMode {
         IGNORE,
         DROP_ITEMS,
@@ -574,10 +580,13 @@ public class StackEntity {
             LivingEntity entity = getEntity();
             int threshold = getEntityConfig().getTagThreshold();
             if (getSize() <= threshold) {
-                if (getEntityConfig().isUseArmorStand() && getEntityConfig().getTagMode() == TagMode.NEARBY) {
+                if (getEntityConfig().isUseArmorStand()) {
+                    if (getDisplayTag().exists()) {
+                        getDisplayTag().remove();
+                    }
                     return;
                 }
-                entity.setCustomName(null);
+                entity.customName(null);
                 entity.setCustomNameVisible(false);
                 return;
             }
@@ -585,17 +594,17 @@ public class StackEntity {
             format = format.replace("%type%", getEntityName());
             format = format.replace("%size%", getSize() + "");
             displayName = Utilities.createComponent(format);
-            if (getEntityConfig().isUseArmorStand() && getEntityConfig().getTagMode() == TagMode.NEARBY) {
+            if (getEntityConfig().isUseArmorStand()) {
+                if (!getDisplayTag().exists()) {
+                    getDisplayTag().spawn();
+                }
+                getDisplayTag().updateName(displayName);
                 return;
             }
-            updateName(displayName);
+            entity.customName(displayName);
             if (getEntityConfig().getTagMode() == TagMode.ALWAYS) {
                 entity.setCustomNameVisible(true);
             }
-        }
-
-        private void updateName(Component component) {
-            entity.setCustomName(LegacyComponentSerializer.legacySection().serialize(component));
         }
 
         private String getEntityName() {

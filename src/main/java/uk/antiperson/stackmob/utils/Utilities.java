@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -48,6 +49,7 @@ public class Utilities {
     static {
         boolean usingPaper1;
         try {
+            Bukkit.class.getMethod("spigot");
             Bukkit.spigot().getClass().getMethod("getPaperConfig");
             usingPaper1 = true;
         } catch (NoSuchMethodException e) {
@@ -73,20 +75,18 @@ public class Utilities {
         return numbers;
     }
 
-    public static CompletableFuture<DownloadResult> downloadFile(File filePath, String url) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                URL webPath = new URL(url);
-                try (InputStream in = webPath.openStream()) {
-                    Files.createDirectories(filePath.getParentFile().toPath());
-                    Files.copy(in, filePath.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                }
-                return DownloadResult.SUCCESSFUL;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return DownloadResult.ERROR;
+    public static DownloadResult downloadFile(File filePath, String url) {
+        try {
+            URL webPath = new URL(url);
+            try (InputStream in = webPath.openStream()) {
+                Files.createDirectories(filePath.getParentFile().toPath());
+                Files.copy(in, filePath.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
-        });
+            return DownloadResult.SUCCESSFUL;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return DownloadResult.ERROR;
+        }
     }
 
     public static boolean isPaper() {
@@ -116,6 +116,9 @@ public class Utilities {
     }
 
     public static void removeHandItem(Player player, int itemAmount) {
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
         if (itemAmount == player.getInventory().getItemInMainHand().getAmount()) {
            player.getInventory().setItemInMainHand(null);
            return;

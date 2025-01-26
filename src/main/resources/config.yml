@@ -73,8 +73,7 @@ display-name:
   # Options for when 'NEARBY' is used above. (*)
   nearby:
     # The range from which the tag should be visible.
-    # Format: [(x cord),(y cord),(z cord)]
-    range: [12,6,12]
+    radius: 12
     # How often (in ticks) the tag visibility status of an entity should be updated. (20 ticks = 1 second)
     interval: 50
     # Perform a ray trace, meaning that the tag is only visible if there are no occluding blocks.

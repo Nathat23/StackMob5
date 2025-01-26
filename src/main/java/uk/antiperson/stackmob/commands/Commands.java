@@ -55,10 +55,9 @@ public class Commands implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        Audience sender = sm.getAdventure().sender(commandSender);
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         String cmd = Bukkit.getServer().getPluginCommand("sm").getPlugin().equals(sm) ? "sm" : "stackmob";
-        if (!(commandSender.hasPermission("stackmob.admin"))) {
+        if (!(sender.hasPermission("stackmob.admin"))) {
             sendError(sender, "You do not have permission!");
             return false;
         }
@@ -77,7 +76,7 @@ public class Commands implements CommandExecutor, TabCompleter {
             sendError(sender, "Invalid subcommand!");
             return false;
         }
-        if (subCommand.isPlayerRequired() && !(commandSender instanceof Player)) {
+        if (subCommand.isPlayerRequired() && !(sender instanceof Player)) {
             sendError(sender, "This subcommand requires a player!");
             return false;
         }
@@ -87,7 +86,7 @@ public class Commands implements CommandExecutor, TabCompleter {
             sender.sendMessage(subCommand.buildComponent(cmd));
             return false;
         }
-        subCommand.onCommand(new User(sm.getAdventure().sender(commandSender), commandSender), subCmdArgs);
+        subCommand.onCommand(new User(sender, sender), subCmdArgs);
         return false;
     }
 

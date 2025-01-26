@@ -58,7 +58,7 @@ public class ShearListener implements Listener {
         if (is == null || (maxDurability - durability) == 1) {
             return;
         }
-        sm.getScheduler().runTask(sm, event.getBlock().getLocation(), () -> {
+        sm.getScheduler().runTask(event.getBlock().getLocation(), () -> {
             Dispenser dispenser = (Dispenser) event.getBlock().getState();
             dispenser.getInventory().setItem(dispenser.getInventory().first(event.getTool()), is);
         });
