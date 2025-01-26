@@ -18,8 +18,8 @@ public class MergeTask implements Runnable {
         this.sm = sm;
     }
 
-    private void checkEntity(StackEntity original, boolean checkHasMoved, double checkHasMovedDistance) {
-        if(original.getEntityConfig().isMsptReactiveEnabled()){
+    private void checkEntity(StackEntity original, boolean checkHasMoved, double checkHasMovedDistance, boolean checkMspt) {
+        if(checkMspt){
             if (sm.getMsptProvider().isUnderLoad()){
                 if (sm.getMsptProvider().getMspt()<=original.getEntityConfig().getMsptReactiveUntriggerThreshold()){
                     // mspt was under heavy load, but no longer is, reset its status and skip stacking
@@ -118,8 +118,9 @@ public class MergeTask implements Runnable {
     public void run() {
         boolean checkHasMoved = sm.getMainConfig().getConfig().isCheckHasMoved();
         double checkHasMovedDistance = sm.getMainConfig().getConfig().getCheckHasMovedDistance();
+        boolean checkMspt = sm.getMainConfig().getConfig().isMsptReactiveEnabled();
         for (StackEntity original : sm.getEntityManager().getStackEntities()) {
-            Runnable runnable = () -> checkEntity(original, checkHasMoved, checkHasMovedDistance);
+            Runnable runnable = () -> checkEntity(original, checkHasMoved, checkHasMovedDistance, checkMspt);
             if (Utilities.IS_FOLIA) {
                 sm.getScheduler().runTask(original.getEntity(), runnable);
             } else {
