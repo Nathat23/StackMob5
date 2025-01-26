@@ -173,6 +173,12 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/jars/MyPet-3.11-SNAPSHOT-B1627.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>me.lucko</groupId>
+            <artifactId>spark-api</artifactId>
+            <version>0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>
