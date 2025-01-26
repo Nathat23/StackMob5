@@ -18,7 +18,6 @@ import uk.antiperson.stackmob.mspt.DummyMsptProvider;
 import uk.antiperson.stackmob.mspt.MsptProvider;
 import uk.antiperson.stackmob.mspt.PaperMsptProvider;
 import uk.antiperson.stackmob.mspt.SparkMsptProvider;
-import uk.antiperson.stackmob.packets.PlayerManager;
 import uk.antiperson.stackmob.scheduler.BukkitScheduler;
 import uk.antiperson.stackmob.scheduler.FoliaScheduler;
 import uk.antiperson.stackmob.scheduler.Scheduler;
