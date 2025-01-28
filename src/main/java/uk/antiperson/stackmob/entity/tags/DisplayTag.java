@@ -52,7 +52,7 @@ public class DisplayTag {
     }
 
     public void move(Location location) {
-        display.teleport(calculateLocation(location));
+        display.teleportAsync(calculateLocation(location));
     }
 
     private Location calculateLocation(Location location) {
