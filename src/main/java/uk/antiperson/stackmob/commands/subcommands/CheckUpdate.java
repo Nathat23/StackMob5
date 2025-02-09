@@ -15,7 +15,7 @@ public class CheckUpdate extends SubCommand {
 
     @Override
     public boolean onCommand(User sender, String[] args) {
-        sender.sendInfo("Contacting SpigotMC. Please wait...");
+        sender.sendInfo("Contacting Modrinth. Please wait...");
         sm.getUpdater().checkUpdate().whenComplete((updateResult, throwable) -> {
            switch (updateResult.getResult()) {
                case ERROR:

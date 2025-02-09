@@ -1,5 +1,8 @@
 package uk.antiperson.stackmob.utils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.bukkit.plugin.Plugin;
 
 import java.io.BufferedReader;
@@ -11,16 +14,16 @@ import java.util.concurrent.CompletableFuture;
 
 public class Updater {
 
-    private final int resourceId;
+    private final String resourceId;
     private final Plugin sm;
-    public Updater(Plugin sm, int resourceId) {
+    public Updater(Plugin sm, String resourceId) {
         this.sm = sm;
         this.resourceId = resourceId;
     }
 
     public CompletableFuture<UpdateResult> checkUpdate() {
         return CompletableFuture.supplyAsync(() -> {
-           String latestVersion = getLatestVersion();
+           String latestVersion = getLatestVersion().get("version_number").getAsString();;
            if (latestVersion == null) {
                return new UpdateResult(VersionResult.ERROR);
            }
@@ -33,12 +36,18 @@ public class Updater {
         });
     }
 
-    private String getLatestVersion(){
+    private JsonObject getLatestVersion(){
         try{
-            URL updateUrl = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId);
+            URL updateUrl = new URL("https://api.modrinth.com/v2/project/" + resourceId + "/version");
             HttpURLConnection connect = (HttpURLConnection) updateUrl.openConnection();
             connect.setRequestMethod("GET");
-            return new BufferedReader(new InputStreamReader(connect.getInputStream())).readLine();
+            connect.setRequestProperty("Accept", "application/json");
+            connect.setRequestProperty("Content-Type", "application/json");
+            connect.setRequestProperty("User-Agent", sm.getName());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connect.getInputStream()));
+            JsonArray object = JsonParser.parseReader(reader).getAsJsonArray();
+            reader.close();
+            return object.get(0).getAsJsonObject();
         }catch (Exception e){
             e.printStackTrace();
             return null;
@@ -46,9 +55,13 @@ public class Updater {
     }
 
     public CompletableFuture<Utilities.DownloadResult> downloadUpdate() {
-        File currentFile = new File(sm.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-        File updateFile = new File(sm.getServer().getUpdateFolderFile(), currentFile.getName());
-        return Utilities.downloadFile(updateFile, "http://aqua.api.spiget.org/v2/resources/" + resourceId + "/download");
+        return CompletableFuture.supplyAsync(() -> {
+            File currentFile = new File(sm.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+            File updateFile = new File(sm.getServer().getUpdateFolderFile(), currentFile.getName());
+            JsonObject latestVersion = getLatestVersion();
+            String updateUrl = latestVersion.getAsJsonArray("files").get(0).getAsJsonObject().get("url").getAsString();
+            return Utilities.downloadFile(updateFile, updateUrl);
+        });
     }
 
     public enum VersionResult {
