@@ -301,6 +301,16 @@ wait-to-stack:
     - SPAWNER
   reasons-whitelist-invert: false
 
+# Enable the system based on MSPT. The MSPT will be updated as often as stack.interval
+# you should use paper or install Spark for this feature to work! (**)
+mspt-reactive:
+  enabled: false
+  # Above what MSPT should the reactive mode be triggered?
+  trigger-mspt-threshold: 65.0
+  # Below what MSPT should the reactive mode be untriggered?
+  untrigger-mspt-threshold: 45.0
+
+
 # Enable/disable integration with other plugins. (*)
 hooks:
   # Allows the custom 'entity-stacking' flag to be used in worldguard regions.

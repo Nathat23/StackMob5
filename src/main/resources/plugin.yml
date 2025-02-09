@@ -3,7 +3,8 @@ main: uk.antiperson.stackmob.StackMob
 version: ${project.version}
 api-version: 1.16
 folia-supported: true
-softdepend: [WorldGuard, MythicMobs, ClearLag, MyPet, mcMMO, Jobs, Citizens]
+depend: [ProtocolLib]
+softdepend: [WorldGuard, MythicMobs, ClearLag, MyPet, mcMMO, Jobs, Citizens, Spark]
 author: antiPerson
 website: https://modrinth.com/plugin/stackmob
 description: A plugin that aims to improve performance by 'stacking' entities together, with attempts to preserve game mechanics.

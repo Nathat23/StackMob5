@@ -117,6 +117,18 @@ public class EntityConfig {
         return getString("display-name.format");
     }
 
+    public boolean isMsptReactiveEnabled() {
+        return getBoolean("mspt-reactive.enabled");
+    }
+
+    public double getMsptReactiveTriggerThreshold() {
+        return getDouble("mspt-reactive.trigger-mspt-threshold");
+    }
+
+    public double getMsptReactiveUntriggerThreshold() {
+        return getDouble("mspt-reactive.untrigger-mspt-threshold");
+    }
+
     public int getTagThreshold() {
         return getInt( "display-name.threshold");
     }
